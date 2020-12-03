@@ -4,7 +4,7 @@
     #include <string.h>
     #include <math.h>
 
-    #include "tokens.h"
+    #include "../tokens.h"
 
     /* Function Declaration */
     void TOKEN_PRINT(int token_id);
@@ -21,7 +21,7 @@
     char str_buff[256];
 
     int error_counter = 0;
-    const int MAX_ERRORS = 5;
+    const int MAX_ERRORS = 1;
 %}
 
 /* ===== OPTIONS ===== */
@@ -92,7 +92,8 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 "TRUE" | "FALSE"                                { TOKEN_PRINT(T_ΒCONST); return T_ΒCONST; }
 
 "{"                                             { BEGIN(COMMENT); }
-<COMMENT>"}"                                    { BEGIN(INITIAL);  return T_COMMENT; }
+<COMMENT>"}"                                    { BEGIN(INITIAL);  printf("[LINE %d] COMMENT FOUND\n", yylineno); return T_COMMENT; }
+<COMMENT>(\n|\r\n)                              { }
 <COMMENT><<EOF>>                                { ERROR_PRINT("Found comment without closing it. \n"); return T_EOF; }
 <COMMENT>.                                      { }                                    
 
