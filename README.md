@@ -6,8 +6,8 @@
 ## Table of Content (TOC)
 
 - [Technologies](technologies)
-- [Project Tree](projecttree)
-- [How it works](howitworks)
+- [Project Tree](project-tree)
+- [How it works](how-it-works)
 - [Authors](authors)
 - [License](license)
 - [Conclusion](conclusion)
