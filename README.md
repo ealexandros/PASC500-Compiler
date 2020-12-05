@@ -5,12 +5,12 @@
 
 ## Table of Content (TOC)
 
-- [Technologies](technologies)
-- [Project Tree](project-tree)
-- [How it works](how-it-works)
-- [Authors](authors)
-- [License](license)
-- [Conclusion](conclusion)
+- [Technologies](#technologies)
+- [Project Tree](#project-tree)
+- [How it works](#how-it-works)
+- [Authors](#authors)
+- [License](#license)
+- [Conclusion](#conclusion)
 
 ## Technologies
 
