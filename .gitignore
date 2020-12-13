@@ -1,0 +1,10 @@
+instructions/
+.vscode/
+
+FirstStage - Lexical Analysis/LexicalAnalysis.rar
+SecondStage - Syntax Analysis/a.out
+SecondStage - Syntax Analysis/lex.yy.c
+SecondStage - Syntax Analysis/pasc500.output
+SecondStage - Syntax Analysis/pasc500.tab.c
+SecondStage - Syntax Analysis/pasc500.tab.h
+
