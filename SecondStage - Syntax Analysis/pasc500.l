@@ -11,13 +11,13 @@
     #include <string.h>
     #include <math.h>
 
-    #include "../tokens.h"
+    #include "pasc500.tab.h"
 
     /* Function Declaration */
     void TOKEN_PRINT(int token_id);
     void NUMBER_PRINT(int token_id);
     void FLOAT_PRINT(int token_id);
-    void ERROR_PRINT(const char *);
+    void yyerror(const char *);
 
     int BinToInt(char *);
     int HexToInt(char *);
@@ -29,6 +29,8 @@
 
     int error_counter = 0;
     const int MAX_ERRORS = 1;
+
+    #define FLEX_DEBUG 0
 %}
 
 /* ===== OPTIONS ===== */
@@ -101,7 +103,7 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 "{"                                             { BEGIN(COMMENT); }
 <COMMENT>"}"                                    { BEGIN(INITIAL);  printf("[LINE %d] COMMENT FOUND\n", yylineno); return T_COMMENT; }
 <COMMENT>(\n|\r\n)                              { }
-<COMMENT><<EOF>>                                { ERROR_PRINT("Found comment without closing it. \n"); return T_EOF; }
+<COMMENT><<EOF>>                                { yyerror("Found comment without closing it. \n"); return T_EOF; }
 <COMMENT>.                                      { }                                    
 
 \"                                              { strcpy(str_buff, ""); BEGIN(STRING); }
@@ -130,9 +132,9 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
                                                         strcat(str_buff, yytext);
                                                     }
                                                 }
-<STRING>(\n|\r\n)                               { ERROR_PRINT("Found newline without \\ \n"); }
-<STRING><<EOF>>                                 { ERROR_PRINT("End of string without closing it. \n"); return T_EOF; }
-<STRING>.                                       { ERROR_PRINT("Unknown Character. \n"); }
+<STRING>(\n|\r\n)                               { yyerror("Found newline without \\ \n"); }
+<STRING><<EOF>>                                 { yyerror("End of string without closing it. \n"); return T_EOF; }
+<STRING>.                                       { yyerror("Unknown Character. \n"); }
 
 ">="|"<="|"<>"|">"|"<"                          { TOKEN_PRINT(T_RELOP); return T_RELOP; }
 "+"|"-"                                         { TOKEN_PRINT(T_ADDOP); return T_ADDOP; }
@@ -154,44 +156,30 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 ":="                                            { TOKEN_PRINT(T_ASSIGN); return T_ASSIGN; }
 ".."                                            { TOKEN_PRINT(T_DOTDOT); return T_DOTDOT; }
 
-{IDENTIFIER_REG}                                { TOKEN_PRINT(T_IDENTIFIER); return T_IDENTIFIER; }
+{IDENTIFIER_REG}                                { TOKEN_PRINT(T_ID); return T_ID; }
 
 {ICONST_REG}                                    { NUMBER_PRINT(T_ICONST); return T_ICONST; }
 {RCONST_REG}                                    { FLOAT_PRINT(T_RCONST); return T_RCONST; }
 {CCONST_REG}                                    { TOKEN_PRINT(T_CCONST); return T_CCONST; }
 
-"\n"|"\r\n"|"\t"                                { printf("[LINE %d] TOKEN SPECIAL\n", yylineno); } 
+"\n"|"\r\n"|"\t"                                { } 
 " "                                             { } 
 
 <<EOF>>                                         { printf("[LINE %d] TOKEN \"T_EOF\" TOKEN_ID (%d)\n", yylineno, T_EOF); return T_EOF; }
 
-.                                               { ERROR_PRINT("This character can not be recognised."); }
+.                                               { yyerror("This character can not be recognised."); }
 
 %%
 
-int main(int argc, char *argv[]){
-    int token;
-    if(argc > 1){
-        yyin = fopen(argv[1], "r");
-        if (yyin == NULL){
-            perror ("Error opening file"); 
-            return -1;
-        }
-    }
-    
-    do{
-		token = yylex();
-    }while(token != T_EOF);
-    
-    fclose(yyin);
-    yyterminate();
-}
-
 void TOKEN_PRINT(int token_id){
+    if(!FLEX_DEBUG) return;
+
     printf("[LINE %d] TOKEN \"%s\" TOKEN_ID (%d)\n", yylineno, yytext, token_id);
 }
 
 void NUMBER_PRINT(int token_id) {
+    if(!FLEX_DEBUG) return;
+
     int decimal_number, base=10;
     if(strncmp(yytext, "0B", 2) == 0){ decimal_number = BinToInt(yytext); base=2; }
     else if(strncmp(yytext, "0H", 2) == 0){ decimal_number = HexToInt(yytext); base=16; }
@@ -202,6 +190,8 @@ void NUMBER_PRINT(int token_id) {
 }
 
 void FLOAT_PRINT(int token_id){
+    if(!FLEX_DEBUG) return;
+
     float decimal_number;
     int base=10;
     if(strncmp(yytext, "0B", 2) == 0){ decimal_number = BinToFloat(yytext); base=2; }
@@ -212,7 +202,7 @@ void FLOAT_PRINT(int token_id){
     else printf("[LINE %d] TOKEN \"%s\" TOKEN_ID (%d)\n", yylineno, yytext, token_id);
 }
 
-void ERROR_PRINT(const char *err) {
+void yyerror(const char *err) {
     error_counter++;
     printf("[ERROR] LINE %d [ERROR MESSAGE] %s\n", yylineno, err);
 

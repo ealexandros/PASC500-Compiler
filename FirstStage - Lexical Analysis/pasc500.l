@@ -11,7 +11,7 @@
     #include <string.h>
     #include <math.h>
 
-    #include "../tokens.h"
+    #include "tokens.h"
 
     /* Function Declaration */
     void TOKEN_PRINT(int token_id);
@@ -154,7 +154,7 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 ":="                                            { TOKEN_PRINT(T_ASSIGN); return T_ASSIGN; }
 ".."                                            { TOKEN_PRINT(T_DOTDOT); return T_DOTDOT; }
 
-{IDENTIFIER_REG}                                { TOKEN_PRINT(T_IDENTIFIER); return T_IDENTIFIER; }
+{IDENTIFIER_REG}                                { TOKEN_PRINT(T_ID); return T_ID; }
 
 {ICONST_REG}                                    { NUMBER_PRINT(T_ICONST); return T_ICONST; }
 {RCONST_REG}                                    { FLOAT_PRINT(T_RCONST); return T_RCONST; }
