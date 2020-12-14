@@ -74,8 +74,6 @@
 %token <charval>  T_CCONST        "character consant"
 %token <strval>   T_SCONST        "string constant"
 
-%token <strval>   T_COMMENT       "comment"
-
 
 %token <strval>   T_EOF       0   "end of file"
 

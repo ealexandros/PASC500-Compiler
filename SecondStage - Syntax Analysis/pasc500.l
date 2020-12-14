@@ -101,7 +101,7 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 "TRUE" | "FALSE"                                { TOKEN_PRINT(T_ΒCONST); return T_ΒCONST; }
 
 "{"                                             { BEGIN(COMMENT); }
-<COMMENT>"}"                                    { BEGIN(INITIAL);  printf("[LINE %d] COMMENT FOUND\n", yylineno); return T_COMMENT; }
+<COMMENT>"}"                                    { BEGIN(INITIAL);  printf("[LINE %d] COMMENT FOUND\n", yylineno);}
 <COMMENT>(\n|\r\n)                              { }
 <COMMENT><<EOF>>                                { yyerror("Found comment without closing it. \n"); return T_EOF; }
 <COMMENT>.                                      { }                                    
