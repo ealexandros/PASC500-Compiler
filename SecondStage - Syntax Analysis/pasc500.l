@@ -24,6 +24,10 @@
     float BinToFloat(char* str);
     float HexToFloat(char* str);
 
+    int strToInt(char *str);
+    char getCharBetweenQuotes(char *yytext);
+    float strToFloat(char *str);
+
     /* Variables */
     char str_buff[256];
 
@@ -107,7 +111,7 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 <COMMENT>.                                      { }                                    
 
 \"                                              { strcpy(str_buff, ""); BEGIN(STRING); }
-<STRING>\"                                      { BEGIN(INITIAL); printf("[LINE %d] STRING: %s\n", yylineno, str_buff); return T_SCONST; }
+<STRING>\"                                      { BEGIN(INITIAL); printf("[LINE %d] STRING: %s\n", yylineno, str_buff); yylval.strval = strdup(str_buff); return T_SCONST; }
 <STRING>(\\\n|\\\r\n)                           { }
 <STRING>(\\.|[^"\\])                            {
                                                     if(strlen(yytext) == 2){
@@ -156,11 +160,11 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 ":="                                            { TOKEN_PRINT(T_ASSIGN); return T_ASSIGN; }
 ".."                                            { TOKEN_PRINT(T_DOTDOT); return T_DOTDOT; }
 
-{IDENTIFIER_REG}                                { TOKEN_PRINT(T_ID); return T_ID; }
+{IDENTIFIER_REG}                                { TOKEN_PRINT(T_ID); yylval.strval = strdup(yytext); return T_ID; }
 
-{ICONST_REG}                                    { NUMBER_PRINT(T_ICONST); return T_ICONST; }
-{RCONST_REG}                                    { FLOAT_PRINT(T_RCONST); return T_RCONST; }
-{CCONST_REG}                                    { TOKEN_PRINT(T_CCONST); return T_CCONST; }
+{ICONST_REG}                                    { NUMBER_PRINT(T_ICONST); yylval.intval = strToInt(yytext); return T_ICONST; }
+{RCONST_REG}                                    { FLOAT_PRINT(T_RCONST); yylval.floatval = strToFloat(yytext); return T_RCONST; }
+{CCONST_REG}                                    { TOKEN_PRINT(T_CCONST); yylval.charval = getCharBetweenQuotes(yytext); return T_CCONST; }
 
 "\n"|"\r\n"|"\t"                                { } 
 " "                                             { } 
@@ -222,7 +226,19 @@ int BinToInt(char *str){
     return (int) strtol(&str[2], NULL, 2);
 }
 
-float BinToFloat(char* str){
+int strToInt(char *str) {
+    // hexa number
+    if (strncmp(str, "0x", 2) == 0) return HexToInt(str);
+    
+    // binary number
+    if (strncmp(str, "0b", 2) == 0) return BinToInt(str);
+
+    // dec number
+    return strtoll(str, NULL, 10);
+}
+
+
+float BinToFloat(char *str){
     float number = 0.0;
     int i,length_real;
     char *character;
@@ -235,7 +251,7 @@ float BinToFloat(char* str){
     return number;
 }
 
-float HexToFloat(char*str){
+float HexToFloat(char *str){
     float number = 0.0;
     int i,length_real;
     char *character;
@@ -251,3 +267,32 @@ float HexToFloat(char*str){
     return number;
 }
 
+float strToFloat(char *str) {
+    // hex number
+    if (strncmp(str, "0x", 2) == 0) return HexToFloat(str); 
+
+    // binary number
+    if (strncmp(str, "0b", 2) == 0) return BinToFloat(str);
+
+    // dec number
+    return strtoll(str, NULL, 10);
+}
+
+char getCharBetweenQuotes(char *yytext) {
+    if(yytext[1] == '\\'){
+        if(yytext[2] == 'n'){
+            return '\n';
+        }else if(yytext[2] == 't'){
+            return '\t';
+        }else if(yytext[2] == 'v'){
+            return '\v';
+        }else if(yytext[2] == 'b'){
+            return '\b';
+        }else if(yytext[2] == 'f'){
+            return '\f';
+        }else if(yytext[2] == 'r'){
+            return '\r';
+        }
+    }
+    return yytext[1];
+}

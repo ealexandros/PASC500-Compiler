@@ -77,6 +77,23 @@
 
 %token <strval>   T_EOF       0   "end of file"
 
+%type <strval> program header declarations constdefs constant_defs expression variable expressions constant parameter_list
+%type <strval> setexpression elexpressions elexpression typedefs type_defs type_def dims limits limit typename
+%type <strval> standard_type fields field identifiers vardefs variable_defs subprograms subprogram sub_header formal_parameters
+%type <strval> pass comp_statement statements statement assignment if_statement if_tail while_statement for_statement
+%type <strval> iter_space with_statement subprogram_call io_statement read_list read_item write_list write_item
+
+
+%left T_ADDOP T_OROP
+%left T_MULDIVANDOP
+%left T_NOTOP
+
+%nonassoc LOWER_THAN_ELSE
+%nonassoc T_ELSE
+%nonassoc T_RELOP
+%nonassoc T_INOP
+%nonassoc T_EQU
+
 %%
 
 program:                          header declarations subprograms comp_statement T_DOT
@@ -213,7 +230,7 @@ assignment:                       variable T_ASSIGN expression
 if_statement:                     T_IF expression T_THEN statement if_tail
 
 if_tail:                          T_ELSE statement
-                                | %empty
+                                | %empty %prec LOWER_THAN_ELSE
                                 
 while_statement:                  T_WHILE expression T_DO statement
 
@@ -254,7 +271,7 @@ int main(int argc, char *argv[]){
   }
   
   yyparse();
-
+  
   fclose(yyin);
   return 0;
 }
