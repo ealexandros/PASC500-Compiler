@@ -1,4 +1,4 @@
-program try_it;
+program try_it
 const g= 0B1011;
 type ar= array[1..g] of integer;
      ar1= array[1..g] of real;

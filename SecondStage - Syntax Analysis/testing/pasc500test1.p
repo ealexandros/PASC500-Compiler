@@ -1,9 +1,9 @@
-program try_it;
+programd try_it;
 const g= 0B1011;
 type gar= 1..g;
      ar= array[gar] of integer;
      re= record
-           x1, x2:integer
+           x1, x2:integer,
          end;
      ss= set of char;
      day = (monday,tuesday,friday);
