@@ -105,9 +105,9 @@
 program:                          header declarations subprograms comp_statement T_DOT
 
 header:                           T_PROGRAM T_ID T_SEMI
-                                | error T_ID T_SEMI                                                     { yyerror("The header isn't correct.\n"); yyerrok; }
-                                | T_PROGRAM error T_SEMI                                                { yyerror("The header isn't correct.\n"); yyerrok; }
-                                | T_PROGRAM T_ID error                                                  { yyerror("The header isn't correct.\n"); yyerrok; }
+                                | error T_ID T_SEMI                                                { yyerror("The header isn't correct.\n"); yyerrok; }
+                                | T_PROGRAM error T_SEMI                                           { yyerror("The header isn't correct.\n"); yyerrok; }
+                                | T_PROGRAM T_ID error                                             { yyerror("The header isn't correct.\n"); yyerrok; }
 
 declarations:                     constdefs typedefs vardefs
 
