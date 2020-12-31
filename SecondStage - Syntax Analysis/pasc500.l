@@ -32,7 +32,7 @@
     char str_buff[256];
 
     int error_counter = 0;
-    const int MAX_ERRORS = 1;
+    const int MAX_ERRORS = -1;
 
     #define FLEX_DEBUG 0
 %}
@@ -105,13 +105,13 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 "TRUE" | "FALSE"                                { TOKEN_PRINT(T_ΒCONST); return T_ΒCONST; }
 
 "{"                                             { BEGIN(COMMENT); }
-<COMMENT>"}"                                    { BEGIN(INITIAL);  printf("[LINE %d] COMMENT FOUND\n", yylineno);}
+<COMMENT>"}"                                    { BEGIN(INITIAL); }
 <COMMENT>(\n|\r\n)                              { }
 <COMMENT><<EOF>>                                { yyerror("Found comment without closing it. \n"); return T_EOF; }
 <COMMENT>.                                      { }                                    
 
 \"                                              { strcpy(str_buff, ""); BEGIN(STRING); }
-<STRING>\"                                      { BEGIN(INITIAL); printf("[LINE %d] STRING: %s\n", yylineno, str_buff); yylval.strval = strdup(str_buff); return T_SCONST; }
+<STRING>\"                                      { BEGIN(INITIAL); yylval.strval = strdup(str_buff); return T_SCONST; }
 <STRING>(\\\n|\\\r\n)                           { }
 <STRING>(\\.|[^"\\])                            {
                                                     if(strlen(yytext) == 2){
@@ -169,7 +169,7 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 "\n"|"\r\n"|"\t"                                { } 
 " "                                             { } 
 
-<<EOF>>                                         { printf("[LINE %d] TOKEN \"T_EOF\" TOKEN_ID (%d)\n", yylineno, T_EOF); return T_EOF; }
+<<EOF>>                                         { printf("|--> EVERYTHING COMPILED CORRECTLY.\n"); return T_EOF; }
 
 .                                               { yyerror("This character can not be recognised."); }
 
@@ -210,6 +210,7 @@ void yyerror(const char *err) {
     error_counter++;
     printf("[ERROR] LINE %d [ERROR MESSAGE] %s\n", yylineno, err);
 
+    if(MAX_ERRORS < 0) return;
     if(error_counter == MAX_ERRORS) {
         printf("TOO MANY ERRORS FOUND.\n");
         exit(0);

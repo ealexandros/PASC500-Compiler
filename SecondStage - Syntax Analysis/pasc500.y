@@ -99,11 +99,14 @@
 program:                          header declarations subprograms comp_statement T_DOT
 
 header:                           T_PROGRAM T_ID T_SEMI
+                                | error T_ID T_SEMI                                                     { yyerror("The header isn't correct.\n"); yyerrok; }
+                                | T_PROGRAM error T_SEMI                                                { yyerror("The header isn't correct.\n"); yyerrok; }
+                                | T_PROGRAM T_ID error                                                  { yyerror("The header isn't correct.\n"); yyerrok; }
 
 declarations:                     constdefs typedefs vardefs
 
 constdefs:                        T_CONST constant_defs T_SEMI 
-                                | %empty
+                                | %empty {}
 
 constant_defs:                    constant_defs T_SEMI T_ID T_EQU expression
                                 | T_ID T_EQU expression
@@ -144,7 +147,7 @@ elexpression:                     expression T_DOTDOT expression
                                 | expression
 
 typedefs:                        T_TYPE type_defs T_SEMI
-                                | %empty
+                                | %empty {}
 
 type_defs:                        type_defs T_SEMI T_ID T_EQU type_def
                                 | T_ID T_EQU type_def
@@ -185,13 +188,13 @@ identifiers:                      identifiers T_COMMA T_ID
                                 | T_ID
 
 vardefs:                          T_VAR variable_defs T_SEMI
-                                | %empty
+                                | %empty {}
 
 variable_defs:                    variable_defs T_SEMI identifiers T_COLON typename
                                 | identifiers T_COLON typename
 
 subprograms:                      subprograms subprogram T_SEMI
-                                | %empty
+                                | %empty {}
 
 subprogram:                       sub_header T_SEMI T_FORWARD
                                 | sub_header T_SEMI declarations subprograms comp_statement
@@ -201,13 +204,13 @@ sub_header:                       T_FUNCTION T_ID formal_parameters T_COLON stan
                                 | T_FUNCTION T_ID
 
 formal_parameters:                T_LPAREN parameter_list T_RPAREN
-                                | %empty
+                                | %empty {}
 
 parameter_list:                   parameter_list T_SEMI pass identifiers T_COLON typename
                                 | pass identifiers T_COLON typename
 
 pass:                             T_VAR
-                                | %empty
+                                | %empty {}
 
 comp_statement:                   T_BEGIN statements T_END
 
@@ -222,7 +225,7 @@ statement:                        assignment
                                 | subprogram_call
                                 | io_statement
                                 | comp_statement
-                                | %empty
+                                | %empty {}
 
 assignment:                       variable T_ASSIGN expression
                                 | variable T_ASSIGN T_SCONST
@@ -230,7 +233,7 @@ assignment:                       variable T_ASSIGN expression
 if_statement:                     T_IF expression T_THEN statement if_tail
 
 if_tail:                          T_ELSE statement
-                                | %empty %prec LOWER_THAN_ELSE
+                                | %empty {} %prec LOWER_THAN_ELSE
                                 
 while_statement:                  T_WHILE expression T_DO statement
 
