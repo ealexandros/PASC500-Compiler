@@ -102,10 +102,12 @@
 
 %%
 
-program:                          header declarations subprograms comp_statement T_DOT
+program:                          header declarations subprograms                                  { scope++; }
+                                  comp_statement                                                   { hashtbl_get(hashtbl, scope); scope--; }
+                                  T_DOT                                                            { hashtbl_get(hashtbl, scope); }
                                 ;
 
-header:                           T_PROGRAM T_ID T_SEMI
+header:                           T_PROGRAM T_ID T_SEMI                                            { hashtbl_insert(hashtbl, $2, NULL, scope); }
                                 | error T_ID T_SEMI                                                { yyerror("The header isn't correct.\n"); yyerrok; }
                                 | T_PROGRAM error T_SEMI                                           { yyerror("The header isn't correct.\n"); yyerrok; }
                                 | T_PROGRAM T_ID error                                             { yyerror("The header isn't correct.\n"); yyerrok; }
@@ -229,7 +231,7 @@ subprograms:                      subprograms subprogram T_SEMI
                                 ;
 
 subprogram:                       sub_header T_SEMI T_FORWARD
-                                | sub_header T_SEMI declarations subprograms comp_statement
+                                | sub_header T_SEMI declarations subprograms comp_statement        { hashtbl_get(hashtbl, scope); scope--; }
                                 ;
 
 sub_header:                       T_FUNCTION T_ID formal_parameters T_COLON standard_type          { hashtbl_insert(hashtbl, $2, NULL, scope); }
@@ -271,18 +273,16 @@ assignment:                       variable T_ASSIGN expression
                                 | variable T_ASSIGN T_SCONST
                                 ;
 
-if_statement:                     T_IF                                                             { scope++; } 
+if_statement:                     T_IF
                                   expression T_THEN statement
                                   if_tail
                                 ;
 
-if_tail:                          T_ELSE
-                                  statement                                                        { scope++; }
+if_tail:                          T_ELSE statement
                                 | %empty %prec LOWER_THAN_ELSE                                     { }
                                 ;
                                 
-while_statement:                  T_WHILE                                                          { scope++; } 
-                                    expression T_DO statement
+while_statement:                  T_WHILE expression T_DO statement
                                 ;
 
 for_statement:                    T_FOR T_ID T_ASSIGN iter_space T_DO statement                    { hashtbl_insert(hashtbl, $1, NULL, scope); scope++; }

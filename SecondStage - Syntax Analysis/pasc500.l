@@ -1,8 +1,11 @@
 /*
-    Authors:
+    Team:
       Ioannis Kontopoulos         2118172
       Vasilis Georgoulas          2118147
       Alexandros Eleftheriadis    2118200
+    Project Coordinator:
+      Alexandros Eleftheriadis 
+
 */
 
 %{

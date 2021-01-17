@@ -13,5 +13,4 @@ pasc500: lex.yy.c pasc500.tab.c pasc500.tab.h ./extra/hashtbl.o
 	gcc pasc500.tab.c lex.yy.c ./extra/hashtbl.o -lm
 
 clean:
-
 	rm pasc500.output pasc500.tab.c lex.yy.c pasc500.tab.h ./extra/hashtbl.o a.out
