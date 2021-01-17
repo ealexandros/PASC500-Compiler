@@ -5,7 +5,6 @@
       Alexandros Eleftheriadis    2118200
     Project Coordinator:
       Alexandros Eleftheriadis 
-
 */
 
 %{
@@ -73,39 +72,39 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 
 %%
 
-"PROGRAM"                                       { TOKEN_PRINT(T_PROGRAM); return T_PROGRAM; }
-"BEGIN"                                         { TOKEN_PRINT(T_BEGIN); return T_BEGIN; }
-"END"                                           { TOKEN_PRINT(T_END); return T_END; }
-"PROCEDURE"                                     { TOKEN_PRINT(T_PROCEDURE); return T_PROCEDURE; }
-"FUNCTION"                                      { TOKEN_PRINT(T_FUNCTION); return T_FUNCTION; }
-"FORWARD"                                       { TOKEN_PRINT(T_FORWARD); return T_FORWARD; }
+"PROGRAM"                                       { TOKEN_PRINT(T_PROGRAM); return T_PROGRAM; yylval.strval = strdup(yytext); }
+"BEGIN"                                         { TOKEN_PRINT(T_BEGIN); return T_BEGIN; yylval.strval = strdup(yytext); }
+"END"                                           { TOKEN_PRINT(T_END); return T_END; yylval.strval = strdup(yytext); }
+"PROCEDURE"                                     { TOKEN_PRINT(T_PROCEDURE); return T_PROCEDURE; yylval.strval = strdup(yytext); }
+"FUNCTION"                                      { TOKEN_PRINT(T_FUNCTION); return T_FUNCTION; yylval.strval = strdup(yytext); }
+"FORWARD"                                       { TOKEN_PRINT(T_FORWARD); return T_FORWARD; yylval.strval = strdup(yytext); }
 
-"CONST"                                         { TOKEN_PRINT(T_CONST); return T_CONST; }
-"TYPE"                                          { TOKEN_PRINT(T_TYPE); return T_TYPE; }
-"ARRAY"                                         { TOKEN_PRINT(T_ARRAY); return T_ARRAY; }
-"VAR"                                           { TOKEN_PRINT(T_VAR); return T_VAR; }
-"INTEGER"                                       { TOKEN_PRINT(T_INTEGER); return T_INTEGER; }
-"REAL"                                          { TOKEN_PRINT(T_REAL); return T_REAL; }
-"BOOLEAN"                                       { TOKEN_PRINT(T_BOOLEAN); return T_BOOLEAN; }
-"RECORD"                                        { TOKEN_PRINT(T_RECORD); return T_RECORD; }
-"CHAR"                                          { TOKEN_PRINT(T_CHAR); return T_CHAR; }
-"SET"                                           { TOKEN_PRINT(T_SET); return T_SET; }
+"CONST"                                         { TOKEN_PRINT(T_CONST); return T_CONST; yylval.strval = strdup(yytext);  }
+"TYPE"                                          { TOKEN_PRINT(T_TYPE); return T_TYPE; yylval.strval = strdup(yytext);  }
+"ARRAY"                                         { TOKEN_PRINT(T_ARRAY); return T_ARRAY; yylval.strval = strdup(yytext);  }
+"VAR"                                           { TOKEN_PRINT(T_VAR); return T_VAR; yylval.strval = strdup(yytext);  }
+"INTEGER"                                       { TOKEN_PRINT(T_INTEGER); return T_INTEGER; yylval.strval = strdup(yytext);  }
+"REAL"                                          { TOKEN_PRINT(T_REAL); return T_REAL; yylval.strval = strdup(yytext);  }
+"BOOLEAN"                                       { TOKEN_PRINT(T_BOOLEAN); return T_BOOLEAN; yylval.strval = strdup(yytext);  }
+"RECORD"                                        { TOKEN_PRINT(T_RECORD); return T_RECORD; yylval.strval = strdup(yytext);  }
+"CHAR"                                          { TOKEN_PRINT(T_CHAR); return T_CHAR; yylval.strval = strdup(yytext);  }
+"SET"                                           { TOKEN_PRINT(T_SET); return T_SET; yylval.strval = strdup(yytext);  }
 
-"IF"                                            { TOKEN_PRINT(T_IF); return T_IF; }
-"WHILE"                                         { TOKEN_PRINT(T_WHILE); return T_WHILE; }
-"DO"                                            { TOKEN_PRINT(T_DO); return T_DO; }
-"FOR"                                           { TOKEN_PRINT(T_FOR); return T_FOR; }
-"ELSE"                                          { TOKEN_PRINT(T_ELSE); return T_ELSE; }
-"THEN"                                          { TOKEN_PRINT(T_THEN); return T_THEN; }
-"DOWNTO"                                        { TOKEN_PRINT(T_DOWNTO); return T_DOWNTO; }
-"TO"                                            { TOKEN_PRINT(T_TO); return T_TO; }
-"OF"                                            { TOKEN_PRINT(T_OF); return T_OF; }
+"IF"                                            { TOKEN_PRINT(T_IF); return T_IF; yylval.strval = strdup(yytext);  }
+"WHILE"                                         { TOKEN_PRINT(T_WHILE); return T_WHILE; yylval.strval = strdup(yytext);  }
+"DO"                                            { TOKEN_PRINT(T_DO); return T_DO; yylval.strval = strdup(yytext);  }
+"FOR"                                           { TOKEN_PRINT(T_FOR); return T_FOR; yylval.strval = strdup(yytext);  }
+"ELSE"                                          { TOKEN_PRINT(T_ELSE); return T_ELSE; yylval.strval = strdup(yytext);  }
+"THEN"                                          { TOKEN_PRINT(T_THEN); return T_THEN; yylval.strval = strdup(yytext);  }
+"DOWNTO"                                        { TOKEN_PRINT(T_DOWNTO); return T_DOWNTO; yylval.strval = strdup(yytext);  }
+"TO"                                            { TOKEN_PRINT(T_TO); return T_TO; yylval.strval = strdup(yytext);  }
+"OF"                                            { TOKEN_PRINT(T_OF); return T_OF; yylval.strval = strdup(yytext);  }
 
-"WITH"                                          { TOKEN_PRINT(T_WITH); return T_WITH; }
-"READ"                                          { TOKEN_PRINT(T_READ); return T_READ; }
-"WRITE"                                         { TOKEN_PRINT(T_WRITE); return T_WRITE; }
+"WITH"                                          { TOKEN_PRINT(T_WITH); return T_WITH; yylval.strval = strdup(yytext); }
+"READ"                                          { TOKEN_PRINT(T_READ); return T_READ; yylval.strval = strdup(yytext); }
+"WRITE"                                         { TOKEN_PRINT(T_WRITE); return T_WRITE; yylval.strval = strdup(yytext); }
 
-"TRUE" | "FALSE"                                { TOKEN_PRINT(T_ΒCONST); return T_ΒCONST; }
+"TRUE" | "FALSE"                                { TOKEN_PRINT(T_ΒCONST); return T_ΒCONST; yylval.strval = strdup(yytext); }
 
 "{"                                             { BEGIN(COMMENT); }
 <COMMENT>"}"                                    { BEGIN(INITIAL); }
@@ -143,25 +142,25 @@ CCONST_REG          '([\x20-\x7E]|\\[nftrbv])'
 <STRING><<EOF>>                                 { yyerror("End of string without closing it. \n"); return T_EOF; }
 <STRING>.                                       { yyerror("Unknown Character. \n"); }
 
-">="|"<="|"<>"|">"|"<"                          { TOKEN_PRINT(T_RELOP); return T_RELOP; }
-"+"|"-"                                         { TOKEN_PRINT(T_ADDOP); return T_ADDOP; }
-"OR"                                            { TOKEN_PRINT(T_OROP); return T_OROP; }
+">="|"<="|"<>"|">"|"<"                          { TOKEN_PRINT(T_RELOP); return T_RELOP; yylval.strval = strdup(yytext); }
+"+"|"-"                                         { TOKEN_PRINT(T_ADDOP); return T_ADDOP; yylval.strval = strdup(yytext); }
+"OR"                                            { TOKEN_PRINT(T_OROP); return T_OROP; yylval.strval = strdup(yytext); }
 
-"*"|"/"|"DIV"|"MOD"|"AND"                       { TOKEN_PRINT(T_MULDIVANDOP); return T_MULDIVANDOP; }
-"NOT"                                           { TOKEN_PRINT(T_NOTOP); return T_NOTOP; }
-"IN"                                            { TOKEN_PRINT(T_INOP); return T_INOP; }
+"*"|"/"|"DIV"|"MOD"|"AND"                       { TOKEN_PRINT(T_MULDIVANDOP); return T_MULDIVANDOP; yylval.strval = strdup(yytext);}
+"NOT"                                           { TOKEN_PRINT(T_NOTOP); return T_NOTOP; yylval.strval = strdup(yytext);}
+"IN"                                            { TOKEN_PRINT(T_INOP); return T_INOP; yylval.strval = strdup(yytext);}
 
-"("                                             { TOKEN_PRINT(T_LPAREN); return T_LPAREN; }
-")"                                             { TOKEN_PRINT(T_RPAREN); return T_RPAREN; }
-";"                                             { TOKEN_PRINT(T_SEMI); return T_SEMI; }
-"."                                             { TOKEN_PRINT(T_DOT); return T_DOT; }
-","                                             { TOKEN_PRINT(T_COMMA); return T_COMMA; }
-"="                                             { TOKEN_PRINT(T_EQU); return T_EQU; }                               
-":"                                             { TOKEN_PRINT(T_COLON); return T_COLON; }
-"["                                             { TOKEN_PRINT(T_LBRACK); return T_LBRACK; }
-"]"                                             { TOKEN_PRINT(T_RBRACK); return T_RBRACK; }
-":="                                            { TOKEN_PRINT(T_ASSIGN); return T_ASSIGN; }
-".."                                            { TOKEN_PRINT(T_DOTDOT); return T_DOTDOT; }
+"("                                             { TOKEN_PRINT(T_LPAREN); return T_LPAREN; yylval.strval = strdup(yytext); }
+")"                                             { TOKEN_PRINT(T_RPAREN); return T_RPAREN; yylval.strval = strdup(yytext); }
+";"                                             { TOKEN_PRINT(T_SEMI); return T_SEMI; yylval.strval = strdup(yytext); }
+"."                                             { TOKEN_PRINT(T_DOT); return T_DOT; yylval.strval = strdup(yytext); }
+","                                             { TOKEN_PRINT(T_COMMA); return T_COMMA; yylval.strval = strdup(yytext); }
+"="                                             { TOKEN_PRINT(T_EQU); return T_EQU; yylval.strval = strdup(yytext); }                               
+":"                                             { TOKEN_PRINT(T_COLON); return T_COLON; yylval.strval = strdup(yytext); }
+"["                                             { TOKEN_PRINT(T_LBRACK); return T_LBRACK; yylval.strval = strdup(yytext); }
+"]"                                             { TOKEN_PRINT(T_RBRACK); return T_RBRACK; yylval.strval = strdup(yytext); }
+":="                                            { TOKEN_PRINT(T_ASSIGN); return T_ASSIGN; yylval.strval = strdup(yytext); }
+".."                                            { TOKEN_PRINT(T_DOTDOT); return T_DOTDOT; yylval.strval = strdup(yytext); }
 
 {IDENTIFIER_REG}                                { TOKEN_PRINT(T_ID); yylval.strval = strdup(yytext); return T_ID; }
 
