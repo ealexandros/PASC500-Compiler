@@ -3,6 +3,7 @@ instructions/
 
 FirstStage - Lexical Analysis/LexicalAnalysis.rar
 SecondStage - Syntax Analysis/a.out
+SecondStage - Syntax Analysis/test.txt
 SecondStage - Syntax Analysis/lex.yy.c
 SecondStage - Syntax Analysis/pasc500.output
 SecondStage - Syntax Analysis/pasc500.tab.c
